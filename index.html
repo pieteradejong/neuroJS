@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>brain</title>
+  <meta name="description" content="brain">
+  <meta name="author" content="Pieter de Jong">
+
+  <!--<link rel="stylesheet" href="css/styles.css">-->
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <script src="lib/underscore.min.js"></script>
+  <script src="lib/numeric.js"></script>
+  <script src="src/neural.js"></script>
+  <script>
+
+  var net = new NeuralNet([2,1]);
+  console.log(net);
+  // console.log(net.forwardProp);
+  // net.forwardProp([1,2,3]);
+  // console.log("activations: ", net._activations);
+  var and = [
+    {input: [0,0], output: 0},
+    {input: [0,1], output: 1},
+    {input: [1,0], output: 1},
+    {input: [1,1], output: 0}
+  ];
+  var trainingStats = net.train(and);
+  console.log("trained", trainingStats);
+  var result = net.run([1,0]);
+  console.log("training result: ", result);
+
+
+  </script>
+</body>
+</html>
