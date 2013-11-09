@@ -3,13 +3,11 @@ var NeuralNet = function(layerSizes) {
   if(!Array.isArray(layerSizes) || layerSizes.length < 2) throw "Must provide array of at least two layers.";
 
   this._EPSILON       = .12;
-  this._lambda        = .2;
-  this._weight_init_min = -.5;
-  this._weight_init_max = .5;
+  this._lambda        = .1;
   
-  this.layerSizes = layerSizes;
-  this._numLayers = layerSizes.length;
-  this.initializeRandomWeights(layerSizes);
+  var weightsInitInterval = [-.01, .01];
+  this._layerSizes = layerSizes;
+  this.initializeRandomWeights(layerSizes, weightsInitInterval);
   this.initializeActivations(layerSizes);
   this.initializeWeightedSums(layerSizes);
 }
@@ -17,10 +15,9 @@ var NeuralNet = function(layerSizes) {
 NeuralNet.prototype = {
   train : function (examples, options) {
     // example = {input: [2,5,3,1], output: 7}
-    console.log("training...");
     var options = options || {};
-    var learningRate    = options.learningRate || .2;
-    var errorThreshold  = options.errorThreshold || .5;
+    var learningRate    = options.learningRate || .1;
+    var errorThreshold  = options.errorThreshold || .004;
     var maxIterations   = options.maxIterations || 100;
     
     this._numExamples     = examples.length;
@@ -30,15 +27,16 @@ NeuralNet.prototype = {
 
     do {
       countIterations++;
-      console.log(countIterations);
       for(var i = 0; i < this._numExamples; i++) {
         var example = examples[i];
         this.forwardProp(example.input);
         cost += this.costFuncLogistic(_.last(this._activations), example.output);
         this.backwardProp(example.output);
       }
+      cost = cost / this._numExamples;
+      console.log("iteration number: ", countIterations, "cost: ", cost);
       this.updateWeights(learningRate);
-    } while (countIterations <= maxIterations && cost > errorThreshold);
+    } while (countIterations < maxIterations && cost > errorThreshold);
     
     return trainStats = {
       cost: cost,
@@ -47,67 +45,79 @@ NeuralNet.prototype = {
   },
 
   forwardProp : function(example) {
-    console.log("forwardProp...");
     this._activations[0] = example;
     this._weightedSums[0] = example;
-    for(var i = 1; i < this._numLayers; i++) {
-      this._weightedSums[i] = numeric.dotMV(this._weights[i-1], this._activations[i-1]);
+    for(var i = 1; i < this._layerSizes.length; i++) {
+      this._weightedSums[i] = nm.dotMV(this._weights[i-1], this._activations[i-1]);
       this._activations[i] = this.sigmoid(this._weightedSums[i]);
     }
   },
 
   backwardProp : function(target) {
-    console.log("backwardProp...");
+    // console.log("deltas before init: ", this._deltas); // undefined
     this.initializeDeltas();
-    this._deltas[this._numLayers] = numeric.sub(this._activations[this._numLayers], target);
-    for(var i = this._numLayers - 1; i >= 1; i--) {
-      this._deltas[i] = numeric.mul(numeric.dot(this._weights[i], this._deltas[i+1]), this.sigmoidGradient(this._weightedSums[i]));
+    // console.log("deltas after init: ", this._deltas[0], this._deltas[1]); // [0,0][0,0,0] OK
+    // check components defined?
+    // console.log("activations: ", this._activations); // OK
+    // console.log("last layer normal activations: ", this._activations[this._activations.length-1]);
+    // console.log("last layer activations: ", _.last(this._activations)); 
+    // console.log("target: ", target);
+    this._deltas[this._deltas.length-1] = nm.sub(this._activations[this._activations.length-1], target);
+    // break;
+    // console.log("deltas at init last layer: ", this._deltas);
+    for(var i = this._deltas.length-2; i >= 0; i--) {
+      // console.log("weights and deltas: ", this._weights[i], this._deltas[i+1]);
+      this._deltas[i] = nm.mul(nm.dotMV(this._weights[i], this._deltas[i+1]), this.sigmoidGradient(this._weightedSums[i]));
+      // console.log("deltas: ", this._deltas);
     }
   },
 
   costFuncLogistic : function(activations_last, target, weights) {
-    // compute cost for one example, given activation vector and target vector, and potentially weights
     var weights = weights || this._weights; // allow for gradient checking using +/- EPSILON
     var ones = this.ones(activations_last.length);
-    var term1 = -1 * numeric.mul(target, numeric.log(_.last(this._activations)));
-    var mul1 = numeric.sub(ones, target); // OK
-    var mul2 = numeric.log(numeric.sub(ones, _.last(this._activations))); // NOT OK
-    var term2 = -1 * numeric.mul(mul1,mul2);
-    var regularization = this._lambda / ( 2 * this._numExamples );
-    var regularization = regularization * _.reduce(this._weights, function(memo, value) {
-      return memo + numeric.sum(value);
+    var term1 = -1 * nm.mul(target, nm.log(_.last(this._activations)));
+    var term2 = -1 * nm.mul(nm.sub(ones, target), nm.log(nm.sub(ones, _.last(this._activations))));
+    var regularization = this._lambda/(2*this._numExamples) * _.reduce(this._weights, function(memo, value) {
+      return memo + nm.sum(value);
     }, 0);
     return term1 + term2 + regularization;
   },
 
   updateWeights : function(learningRate) {
-    console.log("updating weights...");
     for(var i = 0; i < this._weights.length; i++) {
-        numeric.sub(this._weights[i], numeric.mul(learningRate, this._deltas[i]));
+        nm.sub(this._weights[i], nm.mul(learningRate, this._deltas[i]));
       }
+  },
+
+  initializeDeltas : function() {
+    this._deltas = Array(this._layerSizes.length - 1);
+    for(var i = 0; i < this._deltas.length; i++) {
+      this._deltas[i] = this.zeros(this._layerSizes[i+1]);
+    }
+    console.log("verify deltas corectly initialized: ", this._deltas);
   },
 
   sigmoid : function(z) {
     if(!Array.isArray(z)) throw "Input must be array."
-    var result = numeric.neg(z);
-    result = numeric.exp(result);
-    result = numeric.addVS(result, 1);
-    result = numeric.div(1, result);
+    var result = nm.neg(z);
+    result = nm.exp(result);
+    result = nm.addVS(result, 1);
+    result = nm.div(1, result);
     return result;
   },
 
   sigmoidGradient : function(z) {
-    return numeric.mul(this.sigmoid(z), numeric.addVS(numeric.neg(this.sigmoid(z)), 1));
+    return nm.mul(this.sigmoid(z), nm.addVS(nm.neg(this.sigmoid(z)), 1));
   },
 
-  initializeRandomWeights : function() {
+  initializeRandomWeights : function(interval) {
     this._weights = [];
-    for(var i = 0; i < this.layerSizes.length - 1; i++) {
+    for(var i = 0; i < this._layerSizes.length - 1; i++) {
       this._weights[i] = [];
-      for(var j = 0; j < this.layerSizes[i+1]; j++) {
+      for(var j = 0; j < this._layerSizes[i+1]; j++) {
         this._weights[i][j] = [];
-        for(var k = 0; k < this.layerSizes[i]; k++) {
-          this._weights[i][j][k] = this.randomInRange(-.5, .5);
+        for(var k = 0; k < this._layerSizes[i]; k++) {
+          this._weights[i][j][k] = this.randomInRange(interval[0], interval[1]);
         }
       }
     }
@@ -125,31 +135,29 @@ NeuralNet.prototype = {
     return arr;
   },
 
-  initializeDeltas : function() {
-    this._deltas = [];
-    for(var i = 1; i < this.layerSizes.length; i++) {
-      this._deltas[i] = [];
-      for(var j = 0; j < this.layerSizes[i]; j++) {
-        this._deltas[i][j] = 0;
-      }
+  zeros: function(size) {
+    var arr = Array(size);
+    for(var i = 0; i < size; i++) {
+      arr[i] = 0;
     }
+    return arr;
   },
 
-  initializeActivations : function() {
-    this._activations = [];
-    for(var i = 0; i < this.layerSizes.length; i++) {
-      this._activations[i] = [];
-      for(var j = 0; j < this.layerSizes[i]; j++) {
-        this._activations[i][j] = 0;
-      }
+  initializeActivations : function(layerSizes) {
+    this._activations = Array(layerSizes.length);
+    for(var i = 0; i < this._activations.length; i++) {
+      this._activations[i] = this.zeros(layerSizes[i]);
     }
+    // break;
+    // console.log("verify activations corectly initialized: ", this._activations[0],this._activations[1],this._activations[2] );
+    // [0,0,0][0,0][0,0,0] OK
   },
 
   initializeWeightedSums : function() {
     this._weightedSums = [];
-    for(var i = 1; i < this._numLayers; i++) {
+    for(var i = 1; i < this._layerSizes.length; i++) {
       this._weightedSums[i] = [];
-      for(var j = 0; j < this._numLayers[i]; j++) {
+      for(var j = 0; j < this._layerSizes.length[i]; j++) {
         this._weightedSums[i][j] = 0;
       }
     }
@@ -161,8 +169,8 @@ NeuralNet.prototype = {
   },
 
   gradientChecking : function() {
-    var plus_EPSILON  = this.costFuncLogistic.call(this, _.last(this._activations), target, numeric.sub(weights, this._EPSILON))
-    var minus_EPSILON = this.costFuncLogistic.call(this, _.last(this._activations), target, numeric.add(weights, this._EPSILON));
+    var plus_EPSILON  = this.costFuncLogistic.call(this, _.last(this._activations), target, nm.sub(weights, this._EPSILON))
+    var minus_EPSILON = this.costFuncLogistic.call(this, _.last(this._activations), target, nm.add(weights, this._EPSILON));
     return (plus_EPSILON + minus_EPSILON) / ( 2 * this._EPSILON );
   }
 
