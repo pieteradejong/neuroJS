@@ -16,11 +16,13 @@ NeuralNet.prototype = {
     options         = options                || {};
     costThreshold   = options.costThreshold  ||    .005;
     learningRate    = options.learningRate   ||    .05;
-    maxIterations   = options.maxIterations  || 600;
+    maxIterations   = options.maxIterations  || 500;
     lambda          = options.lambda         ||   1;
     
     countIterations = 0;
     
+    console.log("Started training...", "\n");
+
     do {
       countIterations++
       deltas = this.initializeDeltas();
@@ -60,8 +62,12 @@ NeuralNet.prototype = {
         cost += lambda/(2*examples.length) * this.sumMatrix(matrixSquared);
       }
 
-    } while (cost > costThreshold && countIterations <= maxIterations);
+      console.log("Iteration number: ", countIterations, " cost: ", cost);
+
+    } while (cost > costThreshold && countIterations < maxIterations);
     
+    console.log("\n", "Training complete after ", countIterations, " iterations; Cost: ", cost, "\n");
+
     return {
       cost: cost,
       iterations: countIterations
