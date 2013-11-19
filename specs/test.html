@@ -16,49 +16,44 @@
 </head>
 
 <body>
-  <script src="lib/underscore.min.js"></script>
+  <img src="Artificial_neural_network.svg" />
+  <script src="../lib/underscore.min.js"></script>
   <!-- // <script src="lib/numeric.js"></script> -->
-  <script src="lib/sylvester.js"></script>
-  <script src="src/neural_sylvester.js"></script>
+  <script src="../lib/sylvester.src.js"></script>
+  <script src="../src/neural.js"></script>
   <script>
 
   var net = new NeuralNet([2,3,1]);
-  
-  // console.log(net);
-  // var xor = [
-  //   {input: [0,0], output: 0},
-  //   {input: [0,1], output: 1},
-  //   {input: [1,0], output: 1},
-  //   {input: [1,1], output: 0}
-  // ]; // done
-  // var and = [
-  //   {input: [0,0], output: 0},
-  //   {input: [0,1], output: 0},
-  //   {input: [1,0], output: 0},
-  //   {input: [1,1], output: 1}
-  // ];
+  var xor = [
+    {input: [0,0], output: 0},
+    {input: [0,1], output: 1},
+    {input: [1,0], output: 1},
+    {input: [1,1], output: 0}
+  ];
+  var and = [
+    {input: [0,0], output: 0},
+    {input: [0,1], output: 0},
+    {input: [1,0], output: 0},
+    {input: [1,1], output: 1}
+  ];
   var or = [
     {input: [0,0], output: 0},
     {input: [0,1], output: 1},
     {input: [1,0], output: 1},
     {input: [1,1], output: 1}
   ];
-  // var xnor = [
-  //   {input: [0,0], output: 1},
-  //   {input: [0,1], output: 0},
-  //   {input: [1,0], output: 0},
-  //   {input: [1,1], output: 1}
-  // ];
+  var xnor = [
+    {input: [0,0], output: 1},
+    {input: [0,1], output: 0},
+    {input: [1,0], output: 0},
+    {input: [1,1], output: 1}
+  ];
   var trainingStats = net.train(or);
-  console.log("trained", trainingStats);
-  var result = net.predict([0,0]); //
-  // var result = net.predict([0,1]); //
-  // var result = net.predict([1,0]); // 
-  // var result = net.predict([1,1]); //
-
-  console.log("activation predictions: ", result.elements);
-  // console.log("expected: ~ .987");
-
+  
+  var input_example = [1,0];
+  console.log("input: ", input_example);
+  var result = net.predict(input_example);
+  console.log("prediction output: ", result.elements);
 
   </script>
 </body>

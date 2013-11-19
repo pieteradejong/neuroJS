@@ -14,8 +14,8 @@ NeuralNet.prototype = {
         options, costThreshold, learningRate, maxIterations, lambda, countIterations;
 
     options         = options                || {};
-    costThreshold   = options.costThreshold  ||    .005;
-    learningRate    = options.learningRate   ||    .05;
+    costThreshold   = options.costThreshold  ||    .05;
+    learningRate    = options.learningRate   ||    .1;
     maxIterations   = options.maxIterations  || 500;
     lambda          = options.lambda         ||   1;
     
