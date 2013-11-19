@@ -82,12 +82,22 @@ predict the output of [0,1]:
 - Switched from numeric.js library to Sylvester.js library in the middle of the project.
 - Neural Nets are somewhat opaque, so debugging can be hard.
 
-### Screenshots
+# Screenshots
+
+This screenshot schows the slight change in network parameters after each iteration, as they are updated
+to better fit the input and output for which it's been trained.
+
+Also shown is the the cost after each iteration. The cost decreases as the network learns the desired output.
+
 
 ## Starting training
 
 ![neural network](http://pieteronline.com/neurojs/specs/training_start.png)
 
-## Finish training; prediction:
+## Finish training; prediction
+
+After training, the network makes a prediction given an input we give it.
+In this screenshot, it is predicting the ouput of an `OR` gate with input `[0,1]`.
+The network approximates the actual output, which would be 1.
 
 ![neural network](http://pieteronline.com/neurojs/specs/training_prediction.png)
