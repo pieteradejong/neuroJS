@@ -1,4 +1,4 @@
-#neuroJS: JavaScript Neural Network library
+#neuroJS: Neural Network library
 
 ##About
 neuroJS is a neural network library written in JavaScript.
@@ -19,7 +19,7 @@ The network will stop training when either of these conditiona is reached:
 - The Sylvester.js library was used to perform vector/matrix calculations.
 - Underscore.js was used to perform array operations.
 
-Files:
+##Files:
 - src/neural.js: the neural network
 - lib/underscore.min.js: Underscore utility library
 - lib/sylvester.js: vector/matrix/geometry library for JavaScript 
@@ -33,7 +33,9 @@ Use the library by opening test.html in a browser.
     var net = new NeuralNet(layerSizes[, options])
 
 `layerSizes` (required): array with the numbers of nodes in each layer, including input and output layer;
-options (optional): JavaScript object with configuration parameters for the Net:
+
+`options` (optional): JavaScript object with configuration parameters for the Net:
+
 `costThreshold`: the network error value at which to stop training.
 
 `learningRate`: the rate at which the network is updated.
@@ -45,7 +47,7 @@ options (optional): JavaScript object with configuration parameters for the Net:
 ###Train:
     net.train(examples)
 
-for example, train an 'and' logic gate:
+for example, train an 'AND' gate:
 
     [
     {input: [0,0], output: 0},
@@ -55,6 +57,6 @@ for example, train an 'and' logic gate:
     ]
 
 ###Predict:
-for example, predict the output of [0,1]:
+predict the output of [0,1]:
 
-net.predict([0,1])
+    net.predict([0,1])
