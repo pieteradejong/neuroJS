@@ -33,7 +33,7 @@ Use the library by opening test.html in a browser.
     var net = new NeuralNet(layerSizes[, options])
 
 `layerSizes` (required): array with the numbers of nodes in each layer, including input and output layer;
-- for example, layerSizes = [10, 15, 4] creates a network with 10 input nodes, one hidden layer with 15 nodes 
+- for example, `layerSizes = [10, 15, 4]` creates a network with 10 input nodes, one hidden layer with 15 nodes 
 and an output layer with 4 nodes.
 
 `options` (optional): JavaScript object with configuration parameters for the Net:
@@ -47,6 +47,7 @@ and an output layer with 4 nodes.
 `lambda`: regularization parameter that prevents overfitting.
 
 Default settings:
+
     {
     costThreshold: 0.05,
     learningRate: 0.01,
@@ -70,3 +71,9 @@ for example, train an 'AND' gate:
 predict the output of [0,1]:
 
     net.predict([0,1])
+
+## Challenges:
+
+- JavaScript is not ideal for matrix algebra.
+- Switched from numeric.js library to Sylvester.js library in the middle of the project.
+- Neural Nets are somewhat opaque, so debugging can be hard.
