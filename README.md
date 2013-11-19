@@ -33,16 +33,26 @@ Use the library by opening test.html in a browser.
     var net = new NeuralNet(layerSizes[, options])
 
 `layerSizes` (required): array with the numbers of nodes in each layer, including input and output layer;
+- for example, layerSizes = [10, 15, 4] creates a network with 10 input nodes, one hidden layer with 15 nodes 
+and an output layer with 4 nodes.
 
 `options` (optional): JavaScript object with configuration parameters for the Net:
 
-`costThreshold`: the network error value at which to stop training.
+`costThreshold`: the network error value at which to stop training. 
 
 `learningRate`: the rate at which the network is updated.
 
 `maxIterations`: maximum number of iterations over training data set.
 
 `lambda`: regularization parameter that prevents overfitting.
+
+Default settings:
+    {
+      costThreshold: 0.05,
+      learningRate: 0.01,
+      maxIterations: 500,
+      lambda: 1
+    }
 
 ###Train:
     net.train(examples)
