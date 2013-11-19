@@ -40,6 +40,15 @@ NeuralNet.prototype = {
           deltas[k] = deltas[k].add(deltasUpdate[k]);
         }
       }
+
+      if(countIterations % 1 === 0) {
+        console.log("\n");
+        console.log(this._weights[0].elements[0]);
+        console.log(this._weights[0].elements[1]);
+        console.log(this._weights[0].elements[2]);
+        console.log(this._weights[1].elements[0]);
+        console.log("\n");
+      }
       
       for(var i = 0; i < deltas.length; i++) {
         var weights_i = this._weights[i];
@@ -65,7 +74,7 @@ NeuralNet.prototype = {
       console.log("Iteration number: ", countIterations, " cost: ", cost);
 
     } while (cost > costThreshold && countIterations < maxIterations);
-    
+
     console.log("\n", "Training complete after ", countIterations, " iterations; Cost: ", cost, "\n");
 
     return {

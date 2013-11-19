@@ -57,7 +57,7 @@ Default settings:
     lambda: 1
     }
 
-###Train:
+###Train
     net.train(examples)
 
 for example, train an 'AND' gate:
@@ -69,13 +69,23 @@ for example, train an 'AND' gate:
     {input: [1,1], output: 1}
     ]
 
-###Predict:
+### Predict
 predict the output of [0,1]:
 
     net.predict([0,1])
 
-## Challenges:
+## Challenges
 
 - JavaScript is not ideal for matrix algebra.
 - Switched from numeric.js library to Sylvester.js library in the middle of the project.
 - Neural Nets are somewhat opaque, so debugging can be hard.
+
+### Screenshots
+
+## Starting training
+
+![neural network](http://pieteronline.com/neurojs/specs/training_start.png)
+
+## Finish training; prediction:
+
+![neural network](http://pieteronline.com/neurojs/specs/training_prediction.png)
