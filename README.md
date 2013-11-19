@@ -48,10 +48,10 @@ and an output layer with 4 nodes.
 
 Default settings:
     {
-      costThreshold: 0.05,
-      learningRate: 0.01,
-      maxIterations: 500,
-      lambda: 1
+    costThreshold: 0.05,
+    learningRate: 0.01,
+    maxIterations: 500,
+    lambda: 1
     }
 
 ###Train:
