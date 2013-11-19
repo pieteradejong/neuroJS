@@ -11,11 +11,11 @@ This library can:
 
 - Create a neural network with a given number of layers and nodes for each layer.
 - Train the net on a collection of training examples.
-- Feed the net a previously unseen example to predict the output.
+- Feed the net previously unseen examples to predict the output.
 
-The network will stop training when either of these conditiona is reached:
-- maximum number of iterations, as specified by maxIterations
-- maximum classification error, as specified by errorThreshold
+The network will stop training when either of these conditions is reached:
+- maximum number of iterations, as specified by `maxIterations`
+- maximum classification error, as specified by `errorThreshold`
 
 ##Dependencies
 - The Sylvester.js library was used to perform vector/matrix calculations.
@@ -28,25 +28,27 @@ The network will stop training when either of these conditiona is reached:
 - specs/test.html: use to load neural net in the browser
 
 ##Usage 
-Use the library by opening test.html in a browser.
+Use the library by opening test.html in either Chrome of Firefox and opening the console.
 
 ###Create a new network:
+
+To create a new network `net`, run this command in the console:
 
     var net = new NeuralNet(layerSizes[, options])
 
 `layerSizes` (required): array with the numbers of nodes in each layer, including input and output layer;
-- for example, `layerSizes = [10, 15, 4]` creates a network with 10 input nodes, one hidden layer with 15 nodes 
-and an output layer with 4 nodes.
+- for example, `layerSizes = [2, 3, 1]` creates a network with 2 input nodes, one hidden layer with 3 nodes 
+and an output layer with 1 node.
 
-`options` (optional): JavaScript object with configuration parameters for the Net:
+- `options` (optional): JavaScript object with configuration parameters for the Net:
 
-`costThreshold`: the network error value at which to stop training. 
+- `costThreshold`: the network error value at which to stop training. 
 
-`learningRate`: the rate at which the network is updated.
+- `learningRate`: the rate at which the network is updated.
 
-`maxIterations`: maximum number of iterations over training data set.
+- `maxIterations`: maximum number of iterations over training data set.
 
-`lambda`: regularization parameter that prevents overfitting.
+- `lambda`: regularization parameter that prevents overfitting.
 
 Default settings:
 
