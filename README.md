@@ -1,5 +1,4 @@
 #neuroJS: JavaScript Neural Network library
-==================================================
 
 ##About
 neuroJS is a neural network library written in JavaScript.
