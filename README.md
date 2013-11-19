@@ -3,7 +3,9 @@
 ##About
 neuroJS is a neural network library written in JavaScript.
 
-A neural network is a predictive model often used in machine learning. It consists of nodes organized in layers, and connections between them.
+A neural network is a predictive model often used in machine learning. It consists of nodes organized in layers, and connections between them. It looks like this:
+
+![alt tag](http://upload.wikimedia.org/wikipedia/commons/e/e4/Artificial_neural_network.svg)
 
 This library can:
 
