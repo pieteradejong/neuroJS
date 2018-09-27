@@ -87,7 +87,7 @@ predict the output of [0,1]:
 This screenshot schows the slight change in network parameters after each iteration, as they are updated
 to better fit the input and output for which it's been trained.
 
-Also shown is the the cost after each iteration. The cost decreases as the network learns the desired output.
+Also shown is the cost after each iteration. The cost decreases as the network learns the desired output.
 
 
 ## Starting training
